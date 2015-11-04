@@ -1,6 +1,6 @@
  # UE4 Project directories to ignore
  Content/*
-  Content/**
+ Content/
  !Content/ThirdPerson/Blueprints
  # Visual Studio solutions
  *.sln
