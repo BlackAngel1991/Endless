@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{59929758-4D48-B33B-E4A9-3ABFC1B08F64}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Endless",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
