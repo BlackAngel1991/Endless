@@ -49,12 +49,20 @@ void AEndlessCharacter::SetupPlayerInputComponent(class UInputComponent* InputCo
 	check(InputComponent);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	
+	//Input for changing Direction to Left or Right <Coreners in Road>
 	InputComponent->BindAction("TurnRight", IE_Pressed, this, &AEndlessCharacter::TurnRight);
 	InputComponent->BindAction("TurnLeft", IE_Pressed, this, &AEndlessCharacter::TurnLeft);
 
+	
 	InputComponent->BindAxis("MoveForward", this, &AEndlessCharacter::MoveForward);
+
+	//Using it for changing lanes smoothly
 	InputComponent->BindAxis("MoveRight", this, &AEndlessCharacter::MoveRight);
 
+	//Setting Current Forward Axis
+	//Sins we only rotate character 90 degree we 
+	//dont need complex math to detect right direction;
 	CurrentForward = EForwardDirection::EC_X;
 
 }
@@ -62,15 +70,20 @@ void AEndlessCharacter::SetupPlayerInputComponent(class UInputComponent* InputCo
 
 void AEndlessCharacter::TurnRight()
 {
+	//Check if bCanTurn has been set to true by FloorTileCorner to init character rotaion
 	if (bCanTurn)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("TurnRight"));
 		InputDirection = ECornerType::EC_Right;
+
+		//if the direction of Corner and Input is not same set bCanTurn to false and exit function
 		if (InputDirection != CornerDirection)
 		{
 			bCanTurn = false;
 			return;
 		}
+		//else set CenterLane to NextCenterLane  and add 90 degree
+		//to DesiredRotation for rotating character +90 degree
 		CenterLane = NextCenterLane;
 		isTurned = true;
 		DesierdRotaion.Yaw += 90;
@@ -110,11 +123,14 @@ void AEndlessCharacter::DirectonSwap()
 }
 void AEndlessCharacter::TurnCorner()
 {
+
+	//get Current Rotation
 	const FRotator Rotation = Controller->GetControlRotation();
 	
 	
 	
-		
+		//check that current rotation and DesierdRotaion are equal or not
+		//if they are not then use RInterpTo to rate charater at given speed
 		if (!Rotation.Equals(DesierdRotaion, 0.1))
 		{
 
@@ -123,7 +139,12 @@ void AEndlessCharacter::TurnCorner()
 
 
 		}
-		else if (isTurned)
+		//if character can turn  and player used turn input set current rotation to desired rotation
+		//the reason we r checking is that this function running every tick and we don't want to call 
+		//DirectonSwap  every tick (if we call it inside TurnLeft or TurnRight weird thing will happen
+		//and the reason why we r setting Rotation after RInterpTo is that RInterpTo will never Set 
+		//rotation to exact 90,180,270,... it will always left result with some float value like 89.8, 179.4,...
+		else if (isTurned) 
 		{
 
 			AEndlessCharacter::DirectonSwap();
@@ -161,14 +182,19 @@ void AEndlessCharacter::MoveRight(float Value)
 
 		FVector ActorPosition = GetActorLocation();
 		FVector NextPosition = FVector(0, 0, 0);
+		//will use it for FInterpTo
 		float TempLoc = 0.f;
 		//TempLoc = Value;
+		//if CurrentForward is X then we should Add offset to Y Axis to position of character
+		//else we should add it to X positoin
 		switch (CurrentForward)
 		{
+
 		case EForwardDirection::EC_X:
-			
+			//calculate the position that character should go to change lane (only on Axis)
 			TempLoc = CenterLane.Y + (LaneOffset.Y*Value*GetActorRightVector().Y);
-			UE_LOG(LogTemp, Error, TEXT("X Axis & Pos: %s ,%f"), *ActorPosition.ToString(), TempLoc);
+			//UE_LOG(LogTemp, Error, TEXT("X Axis & Pos: %s ,%f"), *ActorPosition.ToString(), TempLoc);
+			//Only Set Y axis of character position so we wont interrupt character forward movement or jump or slide 
 			NextPosition = FVector(ActorPosition.X,
 				FMath::FInterpTo(ActorPosition.Y, TempLoc, _DeltaTime, LaneChangeSpeed),
 				ActorPosition.Z);
@@ -176,12 +202,16 @@ void AEndlessCharacter::MoveRight(float Value)
 		case EForwardDirection::EC_Y:
 			
 			TempLoc = CenterLane.X + (LaneOffset.X*Value*GetActorRightVector().X);
-			UE_LOG(LogTemp, Error, TEXT("Y Axis & Pos: %s ,%f"), *ActorPosition.ToString(), TempLoc);
+
+			//UE_LOG(LogTemp, Error, TEXT("Y Axis & Pos: %s ,%f"), *ActorPosition.ToString(), TempLoc);
+			//Only Set X axis of character position so we wont interrupt character forward movement or jump or slide
 			NextPosition = FVector(FMath::FInterpTo(ActorPosition.X, TempLoc, _DeltaTime, LaneChangeSpeed),
 				ActorPosition.Y,
 				ActorPosition.Z);
 			break;
 		}
+
+		//and finally set character position <function is running every frame so everything will work smoothly
 		SetActorRelativeLocation(NextPosition);
 
 		////// find out which way is right

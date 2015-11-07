@@ -1,7 +1,5 @@
  # UE4 Project directories to ignore
- Content/*
- Content/
- !Content/ThirdPerson/Blueprints
+ 
  # Visual Studio solutions
  *.sln
  *.sdf
@@ -63,6 +61,10 @@ Saved/*
 
 # Compiled source files for the engine to use
 Intermediate/*
+
+#Content Files
+Content/*
+!Content/ThirdPerson
 
 # Cache files for the editor to use
 DerivedDataCache/*
