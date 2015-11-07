@@ -65,6 +65,7 @@ Intermediate/*
 #Content Files
 Content/*
 !Content/ThirdPerson
+!Content/EndlessRunner
 
 # Cache files for the editor to use
 DerivedDataCache/*
