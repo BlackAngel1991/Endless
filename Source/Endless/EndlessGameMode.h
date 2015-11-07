@@ -1,8 +1,8 @@
 // Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 #pragma once
 #include "GameFramework/GameMode.h"
-#include "FloorTile.h"
-#include "FloorTileCorner.h"
+#include "RoadTiles/BaseRoadTile.h"
+#include "Managers/RoadSpawnManager.h"
 #include "EndlessGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -22,13 +22,17 @@ public:
 		int32 Counter;
 	UPROPERTY()
 		int32 SpawnLimit;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Classes")
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Classes")
 		TArray<TSubclassOf<class AFloorTile>>  RoadTile;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Classes")
-		TArray<TSubclassOf<class AFloorTileCorner>>  RoadTileCorner;
+		TArray<TSubclassOf<class AFloorTileCorner>>  RoadTileCorner;*/
 
 
+	UPROPERTY()
+	class ARoadSpawnManager* RoadSpawner;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Classes")
+		TSubclassOf<class ARoadSpawnManager> RoadSpawnManagerClass;
 public:
 	virtual void BeginPlay() override;
 

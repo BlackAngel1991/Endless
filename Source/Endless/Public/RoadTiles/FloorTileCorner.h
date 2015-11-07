@@ -4,7 +4,7 @@
 
 #include "GameFramework/Actor.h"
 #include "RoadTiles/BaseRoadTile.h"
-#include "Enums/DirectionEnums.h"
+#include "Enums/EndlessEnums.h"
 #include "FloorTileCorner.generated.h"
 
 
