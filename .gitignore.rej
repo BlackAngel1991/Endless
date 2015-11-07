@@ -1,9 +1,0 @@
-diff a/.gitignore b/.gitignore	(rejected hunks)
-@@ -65,6 +65,7 @@
- #Content Files
- Content/*
- !Content/ThirdPerson
-+!Content/EndlessRunner
- 
- # Cache files for the editor to use
- DerivedDataCache/*
