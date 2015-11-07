@@ -186,7 +186,7 @@ void AEndlessCharacter::MoveRight(float Value)
 		float TempLoc = 0.f;
 		//TempLoc = Value;
 		//if CurrentForward is X then we should Add offset to Y Axis to position of character
-		//else we should add it to X positoin
+		//else we should add it to X position
 		switch (CurrentForward)
 		{
 
@@ -211,7 +211,7 @@ void AEndlessCharacter::MoveRight(float Value)
 			break;
 		}
 
-		//and finally set character position <function is running every frame so everything will work smoothly
+		//and finally set character position <function is running every frame so everything will work smoothly>
 		SetActorRelativeLocation(NextPosition);
 
 		////// find out which way is right
